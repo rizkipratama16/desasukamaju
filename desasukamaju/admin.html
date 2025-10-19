@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Desa Sukamaju</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #E8F5E8 0%, #F1F8E9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(46, 125, 50, 0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            min-width: 400px;
+            animation: slideUp 0.5s ease-out;
+        }
+        .login-header {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .login-body {
+            padding: 40px 30px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2E7D32;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+        }
+        .error-message {
+            color: #f44336;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+            animation: shake 0.3s;
+        }
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Login Admin</h1>
+            <p>Masuk untuk mengelola data pemilih dan calon</p>
+        </div>
+        <div class="login-body">
+            <form id="adminLoginForm" onsubmit="return handleAdminLogin(event)">
+                <div class="form-group">
+                    <label for="adminUsername">Username</label>
+                    <input type="text" id="adminUsername" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" placeholder="Masukkan password" required>
+                </div>
+                <div id="adminError" class="error-message">Username atau password salah</div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Kredensial admin bawaan
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'admin123'
+        };
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorEl = document.getElementById('adminError');
+            errorEl.style.display = 'none';
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                // Set sesi admin
+                localStorage.setItem('isAdminLoggedIn', 'true');
+
+                // Catat login admin
+                try {
+                    const history = JSON.parse(localStorage.getItem('loginHistory') || '[]');
+                    history.push({ nik: username, timestamp: new Date().toISOString() });
+                    localStorage.setItem('loginHistory', JSON.stringify(history));
+                } catch (e) {
+                    console.error('Error recording admin login history', e);
+                }
+
+                // Redirect ke dashboard
+                window.location.href = 'dashboard.html';
+            } else {
+                errorEl.style.display = 'block';
+            }
+            return false;
+        }
+
+        // Jika sudah login, langsung ke dashboard
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // Catat kunjungan ke pageStats
+        (function() {
+            try {
+                const stats = JSON.parse(localStorage.getItem('pageStats') || '{}');
+                const page = location.pathname.split('/').pop() || 'login.html';
+                stats[page] = (stats[page] || 0) + 1;
+                localStorage.setItem('pageStats', JSON.stringify(stats));
+            } catch (err) {
+                console.error(err);
+            }
+        })();
+    </script>
+</body>
+</html>

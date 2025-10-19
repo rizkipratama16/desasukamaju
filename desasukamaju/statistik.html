@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistik Voting - Pemilihan RT/RW Desa Sukamaju</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #E8F5E8 0%, #F1F8E9 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(46, 125, 50, 0.2);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 1.1rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .summary-card .number {
+            font-size: 3.2rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .label {
+            color: #666;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .position-section {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .position-title {
+            font-size: 2.2rem;
+            color: #2E7D32;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #4CAF50;
+        }
+
+        .candidates-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .candidate-stat-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .candidate-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .candidate-header {
+            background: linear-gradient(45deg, #66BB6A, #4CAF50);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .candidate-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .candidate-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .candidate-info p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .candidate-stats-body {
+            padding: 30px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .progress-bar-container {
+            background: #E0E0E0;
+            border-radius: 10px;
+            height: 25px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(45deg, #4CAF50, #66BB6A);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 20px;
+            padding: 80px 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .empty-state-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(45deg, #E8F5E9, #C8E6C9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .empty-state h2 {
+            font-size: 2rem;
+            color: #2E7D32;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .empty-state-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .empty-state-btn {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .empty-state-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .empty-state-btn.secondary {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+        }
+
+        .empty-state-btn.secondary:hover {
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Desktop specific styles */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1600px;
+            }
+
+            .header {
+                padding: 60px 50px;
+            }
+
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .stats-summary {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 35px;
+            }
+
+            .candidates-stats {
+                grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+                gap: 40px;
+            }
+
+            .position-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .candidates-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .position-title {
+                font-size: 1.8rem;
+            }
+
+            .candidate-header {
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .candidate-avatar {
+                width: 60px;
+                height: 60px;
+            }
+
+            .candidate-stats-body {
+                padding: 25px;
+            }
+
+            .empty-state {
+                padding: 60px 30px;
+            }
+
+            .empty-state h2 {
+                font-size: 1.6rem;
+            }
+
+            .empty-state p {
+                font-size: 1rem;
+            }
+
+            .empty-state-actions {
+                flex-direction: column;
+            }
+
+            .empty-state-btn {
+                width: 100%;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            margin-top: 60px;
+            font-size: 1.1rem;
+        }
+
+        .hide {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Statistik Pemilihan RT/RW</h1>
+            <p>Desa Sukamaju - Periode 2024</p>
+            <a href="index.html" class="back-button">← Kembali ke Beranda</a>
+        </div>
+
+        <!-- Empty state removed as requested -->
+
+        <!-- Statistics Content -->
+        <div id="statsContent" class="hide">
+            <div class="stats-summary">
+                <div class="summary-card">
+                    <div class="number" id="totalVotes">0</div>
+                    <div class="label">Total Suara</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="totalCandidates">6</div>
+                    <div class="label">Total Kandidat</div>
+                </div>
+                <div class="summary-card">
+                    <div class="number" id="participation">0%</div>
+                    <div class="label">Partisipasi</div>
+                </div>
+            </div>
+
+            <button class="refresh-btn" onclick="loadStatistics()">Refresh Data</button>
+
+            <!-- RT Statistics -->
+            <div class="position-section">
+                <h2 class="position-title">Calon Ketua RT 01</h2>
+                <div class="candidates-stats" id="rtStats"></div>
+            </div>
+
+            <!-- RW Statistics -->
+            <div class="position-section">
+                <h2 class="position-title">Calon Ketua RW 03</h2>
+                <div class="candidates-stats" id="rwStats"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Pemilihan RT/RW Desa Sukamaju</p>
+        </div>
+    </div>
+    <script>
+        // ===== Candidate management =====
+        // Default candidates (same as admin panel)
+        const DEFAULT_CANDIDATES = [
+            { id:'budi', name:'Budi Santoso', position:'Calon Ketua RT 01', category:'rt', avatar:'https://i.pravatar.cc/400?img=12' },
+            { id:'siti', name:'Siti Aminah', position:'Calon Ketua RT 01', category:'rt', avatar:'https://i.pravatar.cc/400?img=47' },
+            { id:'joko', name:'Joko Widodo', position:'Calon Ketua RT 01', category:'rt', avatar:'https://i.pravatar.cc/400?img=33' },
+            { id:'ahmad', name:'Ahmad Wijaya', position:'Calon Ketua RW 03', category:'rw', avatar:'https://i.pravatar.cc/400?img=15' },
+            { id:'rina', name:'Rina Kartika', position:'Calon Ketua RW 03', category:'rw', avatar:'https://i.pravatar.cc/400?img=44' },
+            { id:'dewi', name:'Dewi Lestari', position:'Calon Ketua RW 03', category:'rw', avatar:'https://i.pravatar.cc/400?img=68' }
+        ];
+        /**
+         * Retrieve candidate list from localStorage or fallback to default list.
+         * The admin panel stores candidates in localStorage key 'adminCandidates'.
+         */
+        function getCandidateList() {
+            const stored = localStorage.getItem('adminCandidates');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        return parsed;
+                    }
+                } catch (e) {
+                    localStorage.removeItem('adminCandidates');
+                }
+            }
+            localStorage.setItem('adminCandidates', JSON.stringify(DEFAULT_CANDIDATES));
+            return DEFAULT_CANDIDATES;
+        }
+        /**
+         * Generate a structured object of candidates grouped by category (rt/rw).
+         */
+        function getCandidatesByCategory() {
+            const list = getCandidateList();
+            return {
+                rt: list.filter(c => c.category === 'rt'),
+                rw: list.filter(c => c.category === 'rw')
+            };
+        }
+        // Initialize candidates object
+        let candidates = getCandidatesByCategory();
+
+        // Fungsi untuk mendapatkan voting data dari localStorage
+        function getVotingData() {
+            return JSON.parse(localStorage.getItem('votingData') || '{}');
+        }
+
+        // Hitung total votes per kategori
+        function calculateTotalVotesByCategory(category) {
+            const votes = getVotingData();
+            const categoryCandidates = candidates[category];
+            return categoryCandidates.reduce((total, candidate) => total + (votes[candidate.id] || 0), 0);
+        }
+
+        // Hitung persentase per kategori
+        function calculatePercentage(votes, totalInCategory) {
+            if (totalInCategory === 0) return 0;
+            return ((votes / totalInCategory) * 100).toFixed(1);
+        }
+
+        // Render statistik kandidat
+        function renderCandidateStats(candidateList, containerId) {
+            const container = document.getElementById(containerId);
+            const votes = getVotingData();
+            const category = candidateList[0]?.category;
+            const totalVotesInCategory = calculateTotalVotesByCategory(category);
+
+            const candidatesWithVotes = candidateList.map(candidate => ({
+                ...candidate,
+                votes: votes[candidate.id] || 0,
+                percentage: calculatePercentage(votes[candidate.id] || 0, totalVotesInCategory)
+            })).sort((a, b) => b.votes - a.votes);
+
+            container.innerHTML = candidatesWithVotes.map((candidate) => {
+                const photo = candidate.avatar || candidate.image || '';
+                return `
+                <div class="candidate-stat-card">
+                    <div class="candidate-header">
+                        <img src="${photo}" alt="${candidate.name}" class="candidate-avatar">
+                        <div class="candidate-info">
+                            <h3>${candidate.name}</h3>
+                            <p>${candidate.position}</p>
+                        </div>
+                    </div>
+                    <div class="candidate-stats-body">
+                        <div class="stat-row">
+                            <span class="stat-label">Total Suara</span>
+                            <span class="stat-value">${candidate.votes}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${candidate.percentage}%">
+                                <span class="progress-text">${candidate.percentage}%</span>
+                            </div>
+                        </div>
+                        ${totalVotesInCategory > 0 ? 
+                            `<div class="stat-row">
+                                <span class="stat-label">Persentase</span>
+                                <span class="stat-value">${candidate.percentage}%</span>
+                            </div>` : 
+                            '<div class="no-votes-message">Belum ada voting</div>'
+                        }
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Check apakah ada data voting
+        function hasVotingData() {
+            const votes = getVotingData();
+            return Object.values(votes).some(voteCount => voteCount > 0);
+        }
+
+        // Load statistics pada halaman
+        function loadStatistics() {
+            candidates = getCandidatesByCategory();
+            const hasData = hasVotingData();
+            const emptyState = document.getElementById('emptyState');
+            const statsContent = document.getElementById('statsContent');
+            if (hasData) {
+                if (emptyState) {
+                    emptyState.classList.add('hide');
+                }
+                statsContent.classList.remove('hide');
+                const totalVotes = Object.values(getVotingData()).reduce((sum, count) => sum + count, 0);
+                const totalRegistered = JSON.parse(localStorage.getItem('registeredUsers') || '[]').length;
+                const participation = totalRegistered > 0 ? ((totalVotes / totalRegistered) * 100).toFixed(1) : 0;
+                document.getElementById('totalVotes').textContent = totalVotes;
+                document.getElementById('participation').textContent = participation + '%';
+                document.getElementById('totalCandidates').textContent = getCandidateList().length;
+                renderCandidateStats(candidates.rt, 'rtStats');
+                renderCandidateStats(candidates.rw, 'rwStats');
+            } else {
+                if (emptyState) {
+                    emptyState.classList.remove('hide');
+                }
+                statsContent.classList.remove('hide');
+                const totalRegistered = JSON.parse(localStorage.getItem('registeredUsers') || '[]').length;
+                document.getElementById('totalVotes').textContent = 0;
+                document.getElementById('participation').textContent = totalRegistered > 0 ? '0%' : '0%';
+                candidates = getCandidatesByCategory();
+                document.getElementById('totalCandidates').textContent = getCandidateList().length;
+                renderCandidateStats(candidates.rt, 'rtStats');
+                renderCandidateStats(candidates.rw, 'rwStats');
+            }
+        }
+
+        window.addEventListener('load', function() {
+            loadStatistics();
+        });    
+    </script>
+</body>
+</html>

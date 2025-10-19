@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Pemilihan RT/RW Desa Sukamaju</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #E8F5E8 0%, #F1F8E9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(46, 125, 50, 0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            min-width: 400px;
+            animation: slideUp 0.5s ease-out;
+        }
+        .login-header {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .login-header h1 { font-size: 2rem; margin-bottom: 10px; }
+        .login-header p { opacity: 0.95; font-size: 0.95rem; }
+        .login-body { padding: 40px 30px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label {
+            display: block; margin-bottom: 8px; color: #2E7D32;
+            font-weight: 600; font-size: 0.95rem;
+        }
+        .form-group input {
+            width: 100%; padding: 14px; border: 2px solid #E0E0E0;
+            border-radius: 10px; font-size: 1rem; transition: all 0.3s;
+        }
+        .form-group input:focus {
+            outline: none; border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+        }
+        .error-message {
+            color: #f44336; font-size: 0.85rem;
+            margin-top: 8px; display: none; animation: shake 0.3s;
+        }
+        .btn-login {
+            width: 100%; background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white; border: none; padding: 16px;
+            border-radius: 10px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; transition: all 0.3s; margin-top: 10px;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+        .btn-login:active { transform: translateY(0); }
+        .register-link {
+            text-align: center; margin-top: 25px; padding-top: 25px;
+            border-top: 1px solid #E0E0E0; color: #666;
+        }
+        .register-link a {
+            color: #4CAF50; text-decoration: none; font-weight: bold;
+            transition: all 0.3s;
+        }
+        .register-link a:hover {
+            color: #388E3C; text-decoration: underline;
+        }
+        .back-home {
+            text-align: center; margin-top: 20px;
+        }
+        .back-home a {
+            color: #666; text-decoration: none; font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .back-home a:hover { color: #4CAF50; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: flex;
+            align-items: center; justify-content: center; z-index: 9999;
+        }
+        .modal-content {
+            background: #fff; border-radius: 10px; padding: 30px 25px;
+            max-width: 500px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-buttons {
+            margin-top: 20px; display: flex; justify-content: center; gap: 15px;
+        }
+        .modal-button {
+            padding: 10px 20px; border: none; border-radius: 5px;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            transition: background 0.3s;
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: #fff;
+        }
+        .modal-button:hover {
+            background: linear-gradient(45deg, #388E3C, #2E7D32);
+        }
+        .modal-button.secondary {
+            background: linear-gradient(45deg, #E53935, #D32F2F);
+        }
+        .modal-button.secondary:hover {
+            background: linear-gradient(45deg, #D32F2F, #C62828);
+        }
+        .admin-link {
+            text-align: center; margin-top: 10px; color: #666;
+        }
+        .admin-link a {
+            color: #4CAF50; text-decoration: none; font-weight: bold;
+            transition: all 0.3s;
+        }
+        .admin-link a:hover {
+            color: #388E3C; text-decoration: underline;
+        }
+        /* Desktop adjustments */
+        @media (min-width: 1024px) {
+            .login-container {
+                max-width: 500px; min-width: 450px;
+            }
+            .login-header { padding: 50px 40px; }
+            .login-header h1 { font-size: 2.2rem; }
+            .login-body { padding: 50px 40px; }
+            .form-group input { padding: 16px; font-size: 1.1rem; }
+            .btn-login { padding: 18px; font-size: 1.2rem; }
+        }
+        @media (max-width: 768px) {
+            .login-container { min-width: unset; max-width: 100%; }
+            .login-header h1 { font-size: 1.5rem; }
+            .login-body { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-header">
+        <h1>Login Pemilih</h1>
+        <p>Desa Sukamaju</p>
+    </div>
+    <div class="login-body">
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label for="nik">NIK (Nomor Induk Kependudukan)</label>
+                <input type="text" id="nik" placeholder="Masukkan NIK 16 digit" maxlength="16" required>
+                <div class="error-message" id="nikError">NIK harus 16 digit</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Masukkan password" required>
+                <div class="error-message" id="passwordError">NIK atau password salah</div>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+        <div class="register-link">
+            Belum punya akun? <a href="register.html">Daftar disini</a>
+        </div>
+        <div class="admin-link">
+            <a href="admin.html">Login sebagai Admin</a>
+        </div>
+        <div class="back-home">
+            <a href="index.html">← Kembali ke Beranda</a>
+        </div>
+    </div>
+    <!-- Custom modal -->
+    <div id="customModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <div id="modalMessage"></div>
+            <div id="modalButtons" class="modal-buttons"></div>
+        </div>
+    </div>
+</div>
+<script>
+    // Modal helpers
+    const modal = document.getElementById('customModal');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalButtons = document.getElementById('modalButtons');
+    function showAlert(message, callback) {
+        modalMessage.innerHTML = message;
+        modalButtons.innerHTML = '<button class="modal-button" id="modalOkBtn">OK</button>';
+        modal.style.display = 'flex';
+        document.getElementById('modalOkBtn').onclick = function() {
+            modal.style.display = 'none';
+            if (callback) callback();
+        };
+    }
+    function showConfirm(message, onResult) {
+        modalMessage.innerHTML = message;
+        modalButtons.innerHTML = '<button class="modal-button" id="modalYesBtn">Ya</button><button class="modal-button secondary" id="modalNoBtn">Tidak</button>';
+        modal.style.display = 'flex';
+        document.getElementById('modalYesBtn').onclick = function() {
+            modal.style.display = 'none';
+            if (onResult) onResult(true);
+        };
+        document.getElementById('modalNoBtn').onclick = function() {
+            modal.style.display = 'none';
+            if (onResult) onResult(false);
+        };
+    }
+    // Only allow numbers in NIK field
+    document.getElementById('nik').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    function handleLogin(event) {
+        event.preventDefault();
+        const nik = document.getElementById('nik').value;
+        const password = document.getElementById('password').value;
+        document.getElementById('nikError').style.display = 'none';
+        document.getElementById('passwordError').style.display = 'none';
+        if (nik.length !== 16) {
+            document.getElementById('nikError').style.display = 'block';
+            return false;
+        }
+        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        const user = users.find(u => u.nik === nik && u.password === password);
+        if (user) {
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+            showAlert('Login berhasil! Selamat datang, ' + nik, function() {
+                window.location.href = 'index.html';
+            });
+        } else {
+            document.getElementById('passwordError').style.display = 'block';
+        }
+        return false;
+    }
+    window.addEventListener('load', function() {
+        const loggedUser = localStorage.getItem('loggedInUser');
+        if (loggedUser) {
+            showConfirm('Anda sudah login. Kembali ke halaman voting?', function(result) {
+                if (result) {
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

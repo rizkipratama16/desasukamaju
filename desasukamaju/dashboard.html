@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Desa Sukamaju</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #F1F8E9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        header {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-size: 1.8rem; }
+        header button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        header button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        h2 { color: #2E7D32; margin: 25px 0 15px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        table th, table td {
+            border: 1px solid #E0E0E0;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        table th {
+            background: #E8F5E9;
+            color: #2E7D32;
+            font-weight: 600;
+        }
+        table td button {
+            background: #E53935;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        table td button:hover {
+            background: #D32F2F;
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #CCC;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .btn-submit {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            background: #43A047;
+            transform: translateY(-1px);
+        }
+        .section-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Dashboard Admin</h1>
+        <button onclick="logoutAdmin()">Logout</button>
+    </header>
+
+    <!-- Data Pemilih -->
+    <div class="section-container">
+        <h2>Data Pemilih Terdaftar</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>NIK</th>
+                    <th>RT</th>
+                    <th>RW</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Kelola Calon -->
+    <div class="section-container">
+        <h2>Kelola Calon</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Posisi</th>
+                    <th>Kategori</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="candidateTableBody"></tbody>
+        </table>
+        <h3>Tambah Calon Baru</h3>
+        <form id="addCandidateForm" onsubmit="return addCandidate(event)">
+            <div class="form-group">
+                <label for="candidateName">Nama</label>
+                <input type="text" id="candidateName" required placeholder="Nama calon">
+            </div>
+            <div class="form-group">
+                <label for="candidatePosition">Posisi</label>
+                <input type="text" id="candidatePosition" required placeholder="Misal: Calon Ketua RT 02">
+            </div>
+            <div class="form-group">
+                <label for="candidateCategory">Kategori</label>
+                <select id="candidateCategory" required>
+                    <option value="rt">RT</option>
+                    <option value="rw">RW</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="candidateImage">URL Foto (opsional)</label>
+                <input type="text" id="candidateImage" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label for="candidateDescription">Deskripsi (opsional)</label>
+                <textarea id="candidateDescription" placeholder="Deskripsi singkat"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Tambah Calon</button>
+        </form>
+    </div>
+
+    <!-- Bagian Data Pengunjung dan Riwayat Login dihapus sesuai permintaan -->
+
+    <!-- Statistik Voting -->
+    <div class="section-container">
+        <h2>Statistik Voting</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Posisi</th>
+                    <th>Total Suara</th>
+                    <th>Persentase</th>
+                </tr>
+            </thead>
+            <tbody id="statsTableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Daftar kandidat bawaan (serupa dengan index.html)
+        const DEFAULT_CANDIDATES = [
+            { id:'budi', name:'Budi Santoso', position:'Calon Ketua RT 01', category:'rt', image:'https://i.pravatar.cc/400?img=12', description:'Pengalaman 10 tahun ...' },
+            { id:'siti', name:'Siti Aminah', position:'Calon Ketua RT 01', category:'rt', image:'https://i.pravatar.cc/400?img=47', description:'Aktif dalam kegiatan ...' },
+            { id:'joko', name:'Joko Widodo', position:'Calon Ketua RT 01', category:'rt', image:'https://i.pravatar.cc/400?img=33', description:'Petani sukses ...' },
+            { id:'ahmad', name:'Ahmad Wijaya', position:'Calon Ketua RW 03', category:'rw', image:'https://i.pravatar.cc/400?img=15', description:'Pengusaha lokal ...' },
+            { id:'rina', name:'Rina Kartika', position:'Calon Ketua RW 03', category:'rw', image:'https://i.pravatar.cc/400?img=44', description:'Profesional IT ...' },
+            { id:'dewi', name:'Dewi Lestari', position:'Calon Ketua RW 03', category:'rw', image:'https://i.pravatar.cc/400?img=68', description:'Guru dan aktivis ...' }
+        ];
+
+        // Ambil kandidat dari localStorage atau default
+        function getCandidateList() {
+            const stored = localStorage.getItem('adminCandidates');
+            if (stored) {
+                try { return JSON.parse(stored); } catch (e) { localStorage.removeItem('adminCandidates'); }
+            }
+            localStorage.setItem('adminCandidates', JSON.stringify(DEFAULT_CANDIDATES));
+            return [...DEFAULT_CANDIDATES];
+        }
+        function saveCandidateList(list) {
+            localStorage.setItem('adminCandidates', JSON.stringify(list));
+        }
+
+        // Cek sesi admin
+        function checkAdmin() {
+            if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        }
+        function logoutAdmin() {
+            localStorage.removeItem('isAdminLoggedIn');
+            window.location.href = 'login.html';
+        }
+
+        // Muat data pemilih
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+            users.forEach((user, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.nik}</td>
+                    <td>${user.rt}</td>
+                    <td>${user.rw}</td>
+                    <td><button onclick="deleteUser('${user.nik}')">Hapus</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        function deleteUser(nik) {
+            let users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            users = users.filter(user => user.nik !== nik);
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            // keluarkan user yang masih login
+            if (localStorage.getItem('loggedInUser')) {
+                const logged = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (logged.nik === nik) { localStorage.removeItem('loggedInUser'); }
+            }
+            loadUsers();
+        }
+
+        // Muat data calon
+        function loadCandidates() {
+            const candidates = getCandidateList();
+            const tbody = document.getElementById('candidateTableBody');
+            tbody.innerHTML = '';
+            candidates.forEach((cand, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${cand.name}</td>
+                    <td>${cand.position}</td>
+                    <td>${cand.category.toUpperCase()}</td>
+                    <td><button onclick="deleteCandidate('${cand.id}')">Hapus</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        function deleteCandidate(id) {
+            let list = getCandidateList();
+            list = list.filter(c => c.id !== id);
+            saveCandidateList(list);
+            // hapus suara calon yang dihapus
+            const votingData = JSON.parse(localStorage.getItem('votingData') || '{}');
+            if (votingData[id]) {
+                delete votingData[id];
+                localStorage.setItem('votingData', JSON.stringify(votingData));
+            }
+            loadCandidates();
+            loadStats();
+        }
+
+        // Tambah calon baru
+        function addCandidate(event) {
+            event.preventDefault();
+            const name = document.getElementById('candidateName').value.trim();
+            const position = document.getElementById('candidatePosition').value.trim();
+            const category = document.getElementById('candidateCategory').value;
+            const image = document.getElementById('candidateImage').value.trim();
+            const description = document.getElementById('candidateDescription').value.trim();
+            if (!name || !position) return false;
+            let list = getCandidateList();
+            // buat id unik berdasarkan nama
+            let baseId = name.toLowerCase().replace(/[^a-z0-9]+/g, '');
+            if (!baseId) baseId = 'cand';
+            let id = baseId, counter = 1;
+            while (list.some(c => c.id === id)) { id = `${baseId}${counter++}`; }
+            const newCand = {
+                id,
+                name,
+                position,
+                category,
+                image: image || 'https://i.pravatar.cc/400?u=' + encodeURIComponent(id),
+                description: description || ''
+            };
+            list.push(newCand);
+            saveCandidateList(list);
+            document.getElementById('addCandidateForm').reset();
+            loadCandidates();
+            loadStats();
+            return false;
+        }
+
+        // Muat statistik voting
+        function loadStats() {
+            const candidates = getCandidateList();
+            const votes = JSON.parse(localStorage.getItem('votingData') || '{}');
+            const totalVotes = Object.values(votes).reduce((sum, c) => sum + c, 0);
+            const tbody = document.getElementById('statsTableBody');
+            tbody.innerHTML = '';
+            candidates.forEach((cand, index) => {
+                const voteCount = votes[cand.id] || 0;
+                const percentage = totalVotes > 0 ? ((voteCount / totalVotes) * 100).toFixed(1) : '0.0';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${cand.name}</td>
+                    <td>${cand.position}</td>
+                    <td>${voteCount}</td>
+                    <td>${percentage}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Statistik pengunjung
+        function loadPageStats() {
+            const stats = JSON.parse(localStorage.getItem('pageStats') || '{}');
+            const tbody = document.getElementById('pageStatsBody');
+            tbody.innerHTML = '';
+            Object.keys(stats).forEach((page, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${page}</td>
+                    <td>${stats[page]}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Histori login
+        function loadLoginHistory() {
+            const history = JSON.parse(localStorage.getItem('loginHistory') || '[]');
+            const tbody = document.getElementById('loginHistoryBody');
+            tbody.innerHTML = '';
+            history.forEach((entry, index) => {
+                const date = new Date(entry.timestamp);
+                const formatted = date.toLocaleString();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${entry.nik}</td>
+                    <td>${formatted}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Inisialisasi saat halaman dimuat
+        window.addEventListener('load', function() {
+            checkAdmin();
+            getCandidateList(); // pastikan tersimpan
+            loadUsers();
+            loadCandidates();
+            loadStats();
+            // loadPageStats(); // removed: pengunjung table dihapus
+            // loadLoginHistory(); // removed: riwayat login dihapus
+            loadRegHistory();
+        });
+
+        // Catat kunjungan halaman dashboard ke pageStats
+        (function() {
+            try {
+                const stats = JSON.parse(localStorage.getItem('pageStats') || '{}');
+                const page = location.pathname.split('/').pop() || 'dashboard.html';
+                stats[page] = (stats[page] || 0) + 1;
+                localStorage.setItem('pageStats', JSON.stringify(stats));
+            } catch (err) {
+                console.error(err);
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - Pemilihan RT/RW Desa Sukamaju</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #E8F5E8 0%, #F1F8E9 100%);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(46, 125, 50, 0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            min-width: 450px;
+            animation: slideUp 0.5s ease-out;
+        }
+        .register-header {
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .register-header h1 { font-size: 2rem; margin-bottom: 10px; }
+        .register-header p { opacity: 0.95; font-size: 0.95rem; }
+        .register-body { padding: 40px 30px; }
+        .form-group { margin-bottom: 22px; }
+        .form-group label {
+            display: block; margin-bottom: 8px; color: #2E7D32;
+            font-weight: 600; font-size: 0.95rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%; padding: 14px;
+            border: 2px solid #E0E0E0; border-radius: 10px;
+            font-size: 1rem; transition: all 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+        }
+        .form-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+        }
+        .error-message {
+            color: #f44336; font-size: 0.85rem;
+            margin-top: 8px; display: none; animation: shake 0.3s;
+        }
+        .success-message {
+            background: #4CAF50; color: white; padding: 15px;
+            border-radius: 10px; margin-bottom: 20px;
+            display: none; text-align: center; animation: slideDown 0.4s;
+        }
+        .btn-register {
+            width: 100%; background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: white; border: none; padding: 16px;
+            border-radius: 10px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; transition: all 0.3s; margin-top: 10px;
+        }
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+        .btn-register:active { transform: translateY(0); }
+        .login-link {
+            text-align: center; margin-top: 25px; padding-top: 25px;
+            border-top: 1px solid #E0E0E0; color: #666;
+        }
+        .login-link a {
+            color: #4CAF50; text-decoration: none; font-weight: bold;
+            transition: all 0.3s;
+        }
+        .login-link a:hover {
+            color: #388E3C; text-decoration: underline;
+        }
+        .back-home {
+            text-align: center; margin-top: 20px;
+        }
+        .back-home a {
+            color: #666; text-decoration: none; font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .back-home a:hover { color: #4CAF50; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: flex;
+            align-items: center; justify-content: center; z-index: 9999;
+        }
+        .modal-content {
+            background: #fff; border-radius: 10px; padding: 30px 25px;
+            max-width: 500px; width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-buttons {
+            margin-top: 20px; display: flex; justify-content: center; gap: 15px;
+        }
+        .modal-button {
+            padding: 10px 20px; border: none; border-radius: 5px;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            transition: background 0.3s;
+            background: linear-gradient(45deg, #4CAF50, #388E3C);
+            color: #fff;
+        }
+        .modal-button:hover {
+            background: linear-gradient(45deg, #388E3C, #2E7D32);
+        }
+        .modal-button.secondary {
+            background: linear-gradient(45deg, #E53935, #D32F2F);
+        }
+        .modal-button.secondary:hover {
+            background: linear-gradient(45deg, #D32F2F, #C62828);
+        }
+        /* Desktop adjustments */
+        @media (min-width: 1024px) {
+            .register-container {
+                max-width: 550px; min-width: 500px;
+            }
+            .register-header { padding: 50px 40px; }
+            .register-header h1 { font-size: 2.2rem; }
+            .register-body { padding: 50px 40px; }
+            .form-group input, .form-group select {
+                padding: 16px; font-size: 1.1rem;
+            }
+            .btn-register {
+                padding: 18px; font-size: 1.2rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .register-container { min-width: unset; max-width: 100%; }
+            .register-header h1 { font-size: 1.5rem; }
+            .register-body { padding: 30px 20px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <div class="register-header">
+        <h1>Daftar Pemilih Baru</h1>
+        <p>Desa Sukamaju</p>
+    </div>
+    <div class="register-body">
+        <div id="successMessage" class="success-message"></div>
+        <form id="registerForm" onsubmit="return handleRegister(event)">
+            <div class="form-group">
+                <label for="nik">NIK (Nomor Induk Kependudukan)</label>
+                <input type="text" id="nik" placeholder="Masukkan NIK 16 digit" maxlength="16" required>
+                <div class="error-message" id="nikError">NIK harus 16 digit</div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="rt">RT</label>
+                    <select id="rt" required>
+                        <option value="">Pilih RT</option>
+                        <option value="01">RT 01</option>
+                        <option value="02">RT 02</option>
+                        <option value="03">RT 03</option>
+                        <option value="04">RT 04</option>
+                        <option value="05">RT 05</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rw">RW</label>
+                    <select id="rw" required>
+                        <option value="">Pilih RW</option>
+                        <option value="01">RW 01</option>
+                        <option value="02">RW 02</option>
+                        <option value="03">RW 03</option>
+                        <option value="04">RW 04</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div id="customModal" class="modal-overlay" style="display:none;">
+                <div class="modal-content">
+                    <div id="modalMessage"></div>
+                    <div id="modalButtons" class="modal-buttons"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Minimal 6 karakter" required>
+                <div class="error-message" id="passwordError">Password minimal 6 karakter</div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Konfirmasi Password</label>
+                <input type="password" id="confirmPassword" placeholder="Ulangi password" required>
+                <div class="error-message" id="confirmError">Password tidak cocok</div>
+            </div>
+            <button type="submit" class="btn-register">Daftar</button>
+        </form>
+        <div class="login-link">
+            Sudah punya akun? <a href="login.html">Login disini</a>
+        </div>
+        <div class="back-home">
+            <a href="index.html">← Kembali ke Beranda</a>
+        </div>
+    </div>
+</div>
+<script>
+    // Modal helpers
+    const modal = document.getElementById('customModal');
+    const modalMessage = document.getElementById('modalMessage');
+    const modalButtons = document.getElementById('modalButtons');
+    function showAlert(message, callback) {
+        modalMessage.innerHTML = message;
+        modalButtons.innerHTML = '<button class="modal-button" id="modalOkBtn">OK</button>';
+        modal.style.display = 'flex';
+        document.getElementById('modalOkBtn').onclick = function() {
+            modal.style.display = 'none';
+            if (callback) callback();
+        };
+    }
+    function showConfirm(message, onResult) {
+        modalMessage.innerHTML = message;
+        modalButtons.innerHTML = '<button class="modal-button" id="modalYesBtn">Ya</button><button class="modal-button secondary" id="modalNoBtn">Tidak</button>';
+        modal.style.display = 'flex';
+        document.getElementById('modalYesBtn').onclick = function() {
+            modal.style.display = 'none';
+            if (onResult) onResult(true);
+        };
+        document.getElementById('modalNoBtn').onclick = function() {
+            modal.style.display = 'none';
+            if (onResult) onResult(false);
+        };
+    }
+    // Only numbers for NIK
+    document.getElementById('nik').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    function handleRegister(event) {
+        event.preventDefault();
+        const nik = document.getElementById('nik').value;
+        const rt  = document.getElementById('rt').value;
+        const rw  = document.getElementById('rw').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        document.getElementById('nikError').style.display = 'none';
+        document.getElementById('passwordError').style.display = 'none';
+        document.getElementById('confirmError').style.display = 'none';
+        let hasError = false;
+        if (nik.length !== 16) {
+            document.getElementById('nikError').textContent = 'NIK harus 16 digit';
+            document.getElementById('nikError').style.display = 'block';
+            hasError = true;
+        }
+        if (password.length < 6) {
+            document.getElementById('passwordError').style.display = 'block';
+            hasError = true;
+        }
+        if (password !== confirmPassword) {
+            document.getElementById('confirmError').style.display = 'block';
+            hasError = true;
+        }
+        if (hasError) return false;
+        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        if (users.find(u => u.nik === nik)) {
+            document.getElementById('nikError').textContent = 'NIK sudah terdaftar';
+            document.getElementById('nikError').style.display = 'block';
+            return false;
+        }
+        const newUser = { nik, rt, rw, password };
+        users.push(newUser);
+        localStorage.setItem('registeredUsers', JSON.stringify(users));
+        document.getElementById('successMessage').textContent = 'Pendaftaran berhasil! Mengalihkan ke halaman login...';
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('registerForm').reset();
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 2000);
+        return false;
+    }
+    window.addEventListener('load', function() {
+        const loggedUser = localStorage.getItem('loggedInUser');
+        if (loggedUser) {
+            showConfirm('Anda sudah login. Kembali ke halaman voting?', function(result) {
+                if (result) {
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
